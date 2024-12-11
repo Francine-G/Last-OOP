@@ -60,7 +60,7 @@ class Facilitator{
                             System.out.println("\nList of In-Kind Donors:");
                             System.out.printf("%-5s | %-30s\n", "No.", "Donor Name");
                             System.out.println("-------------------------------------");
-                            displayDonors("C:\Users\Francine\OneDrive\Desktop\Pleaseeeee\Last-OOP\DonorInfo.txt", "In-Kind Support");
+                            displayDonors("C:\users\Francine\OneDrive\Desktop\Pleaseeeee\Last-OOP\DonorInfo.txt", "In-Kind Support");
     
                         } else if (donorChoice == 2) {
                             System.out.println("\nList of Cash Donors:");
@@ -103,7 +103,7 @@ class Facilitator{
                 break;
     
             case 3: //trasaction process
-            
+
        
         case 4: // Cancel
             System.out.println("\nTransaction canceled. Returning to main menu...");
