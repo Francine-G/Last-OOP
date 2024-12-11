@@ -123,13 +123,17 @@ class Donor {
             writer.write("Donor Contact: " + donorContact + "\n");
             writer.write("Donor Email: " + donorEmail + "\n");
             writer.write("Donation Type: " + donationType + "\n");
-
+    
             if (donationType.equals("Cash")) {
                 writer.write("Cash Amount: P" + cashDonationAmount + "\n");
                 writer.write("Account Name: " + accountName + "\n");
                 writer.write("Account Number: " + accountNumber + "\n");
             } else if (donationType.equals("In-Kind Support")) {
                 writer.write("In-Kind Support Details:\n");
+                writer.write("Donor Name: " + donorName + "\n");
+                writer.write("Donor Address: " + donorAddress + "\n");
+                writer.write("Donor Contact: " + donorContact + "\n");
+                writer.write("Donor Email: " + donorEmail + "\n");
                 for (InKindSupportItem item : inKindSupportItems) {
                     writer.write("- " + item.getItemType() + ": " + item.getQuantity() + "\n");
                 }
@@ -236,7 +240,7 @@ public class DonorInfo {
                     System.out.println("5. Others");
 
                     System.out.print("Enter your choice: ");
-                    String inKindSupportType = "";
+                    String inKindSupportType = null;
                     int inKindChoice;
                     try {
                         inKindChoice = Integer.parseInt(scanner.nextLine());
@@ -261,6 +265,7 @@ public class DonorInfo {
                                 System.out.println("Invalid input. Please enter a valid option.");
                                 continue;
                         }
+                        
                     } catch (NumberFormatException e) {
                         System.out.println("Invalid input. Please enter a valid option.");
                         continue;

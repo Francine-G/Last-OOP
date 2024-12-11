@@ -3,6 +3,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.File;
 import java.util.*;
 
 class Facilitator{
@@ -17,6 +18,7 @@ class Facilitator{
     private int medicalSupplies;
     private int clothing;
     private String[] others;
+    private static final String FILE_PATH = "C:\\Users\\Francine\\OneDrive\\Desktop\\Pleaseeeee\\Last-OOP\\DisasterDetails.txt";
 
 
 
@@ -74,8 +76,7 @@ public void transactions() {
 
                 case 2: // View List of Volunteers
                     System.out.println("\nList of Volunteers:");
-                    System.out.printf("%-5s | %-20s | %-20s | %-20s\n", "No.", "Name", "Contact Info", "Preferred Location");
-                    System.out.println("-------------------------------------------------------------------------------");
+                    displayVolunteers("C:\\Users\\Francine\\OneDrive\\Desktop\\Pleaseeeee\\Last-OOP\\VolunteerDatabase.txt");
                     break;
 
                 default:
@@ -103,7 +104,7 @@ public void transactions() {
             break;
 
         case 3: //trasaction process
-            processTransactions(100, 200, 3100, 500, 71);
+            processTransactions();
        
         case 4: // Cancel
             System.out.println("\nTransaction canceled. Returning to main menu...");
@@ -115,70 +116,85 @@ public void transactions() {
     }
 }
 
-    public void processTransactions(int food, int water, int medicalSupplies, int clothing, int others){
-    Scanner scanner = new Scanner (System.in);
-        while (true) {
-            System.out.println(" ");
-        System.out.println("\n======================================================================================================================================================");
-        System.out.println("                                                       RELIEF GOODS SUPPLIES                                ");
-        System.out.println("========================================================================================================================================================");
-        System.out.println("                   1.Foods             2.Water             3.Medical Supplies             4.Clothing               5.Others               6.Cancel      ");
-        System.out.println("========================================================================================================================================================");
-        System.out.println(" ");
+public void processTransactions() {
+    String filePath = "C:\\Users\\Francine\\OneDrive\\Desktop\\Pleaseeeee\\Last-OOP\\DonorInfo.txt";
+    Map<String, Integer> supplies = new LinkedHashMap<>();
 
-        System.out.println("Enter the Supply you would like to withdraw: ");
-        int supplyType = scanner.nextInt();
-    
-        System.out.println("Enter the quantity needed for the supply: ");
-        int supplyQuantity = scanner.nextInt();
+    try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        String line;
+        String currentItem = null;
 
-        switch (supplyType){
-            case 1: //foods
-                if (supplyQuantity <= food){
-                    food -= supplyQuantity; 
-                    System.out.println("You have withdrawn " + supplyQuantity + " from food, " + "remaining supplies: " + food );
-                }else{
-                        System.out.println("Insufficient Supplies");
-                    }
-                    break;
-            case 2: //water
-                if (supplyQuantity <= water){
-                    water -= supplyQuantity;
-                    System.out.println("You have withdrawn " + supplyQuantity + " from water, " + "remaining supplies: " + water);
-                }else{
-                        System.out.println("Insufficient Supplies");
-                    }
-                    break;
+        while ((line = reader.readLine()) != null) {
+            line = line.trim();
 
-            case 3: //medical supplies
-                if (supplyQuantity <= medicalSupplies){
-                    medicalSupplies -= supplyQuantity; 
-                    System.out.println("You have withdrawn " + supplyQuantity + " from medical supplies, " + "remaining supplies: " + medicalSupplies);
-                }else{
-                    System.out.println("Insufficient Supplies");
-                    }
-                    break;
-
-            case 4: //clothing
-                    if (supplyQuantity <= clothing){
-                    clothing -= supplyQuantity; 
-                    System.out.println("You have withdrawn " + supplyQuantity + " from clothing, " + " remaining supplies: " + clothing);
-                }else{
-                    System.out.println("Insufficient Supplies");
-                    }
-                    break;
-
-            case 5: //others
-                if (supplyQuantity <= others){
-                    others -= supplyQuantity; 
-                    System.out.println("You have withdrawn " + supplyQuantity +  " from others, " + "remaining supplies: " + others);
-                }else{
-                    System.out.println("Insufficient Supplies");
-                }
-                break;
+            if (line.startsWith("- ")) { // Example: "- Food: 1000"
+                String[] parts = line.split(":");
+                currentItem = parts[0].replace("- ", "").trim(); // Extract item name
+                int quantity = Integer.parseInt(parts[1].trim()); // Extract quantity
+                supplies.put(currentItem, quantity);
             }
         }
+    } catch (IOException e) {
+        System.out.println("Error reading the file: " + e.getMessage());
+        return;
     }
+
+    Scanner scanner = new Scanner(System.in);
+
+    while (true) {
+        System.out.println("\n===================================================================");
+        System.out.println("                     RELIEF GOODS SUPPLIES                        ");
+        System.out.println("===================================================================");
+        System.out.println("Available Supplies:");
+        int index = 1;
+        for (String supply : supplies.keySet()) {
+            System.out.println(index++ + ". " + supply + " - Remaining: " + supplies.get(supply));
+        }
+        System.out.println(index + ". Cancel");
+        System.out.println("===================================================================");
+
+        System.out.print("Enter the number of the supply you would like to withdraw: ");
+        int supplyType = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        if (supplyType == index) { // Cancel option
+            System.out.println("Transaction canceled. Returning to the main menu...");
+            break;
+        }
+
+        String chosenItem = null;
+        if (supplyType > 0 && supplyType <= supplies.size()) {
+            chosenItem = new ArrayList<>(supplies.keySet()).get(supplyType - 1);
+        } else {
+            System.out.println("Invalid choice. Please try again.");
+            continue;
+        }
+
+        System.out.print("Enter the quantity needed for " + chosenItem + ": ");
+        int supplyQuantity = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        int availableQuantity = supplies.get(chosenItem);
+        if (supplyQuantity <= availableQuantity) {
+            supplies.put(chosenItem, availableQuantity - supplyQuantity);
+            System.out.println("You have withdrawn " + supplyQuantity + " from " + chosenItem + 
+                               ". Remaining supplies: " + (availableQuantity - supplyQuantity));
+        } else {
+            System.out.println("Insufficient supplies. Only " + availableQuantity + " available.");
+        }
+    }
+
+    // Step 3: Write updated supplies back to the file
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+        for (Map.Entry<String, Integer> entry : supplies.entrySet()) {
+            writer.write("- " + entry.getKey() + ": " + entry.getValue());
+            writer.newLine();
+        }
+        System.out.println("Supplies updated successfully.");
+    } catch (IOException e) {
+        System.out.println("Error writing to the file: " + e.getMessage());
+    }
+}
 
 
     public String getFacilitatorName() {
@@ -206,155 +222,167 @@ public void transactions() {
 
     public void displayDisasterDetails(){
 
-        if (location == null || disasterType == null || popSize == null ||
-            location.length == 0 || disasterType.length == 0 || popSize.length == 0) {
+        File file = new File (FILE_PATH);
+
+        if (!file.exists() || file.length() == 0) {
             System.out.println("There are no Disasters Recorded at the moment.");
             return;
         }
-        
+
         System.out.println("\n=====================================================================================");
-        System.out.println("|         Location        |          Disaster            |       Population Size    | ");
+        System.out.println("|         Location        |          Disaster            |       Population Size    |");
         System.out.println("=====================================================================================");
 
-        for (int i = 0; i < location.length && i < disasterType.length && i < popSize.length; i++) {
-            System.out.printf("%-25s %-28s %-29s|%n", "|          " + location[i], "|          " + disasterType[i], "  |          " + popSize[i]);
-
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] details = line.split("\\|"); // Assuming "|" is the delimiter
+                System.out.printf("%-25s %-28s %-29s|%n", "|          " + details[0], "|          " + details[1], "  |          " + details[2]);
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading disaster details: " + e.getMessage());
         }
 
-        System.out.println("=====================================================================================");
+        System.out.println("+=====================================================================+");
         System.out.println("");
         
     }
 
     public void addDisasterDetails() {
         Scanner scanner = new Scanner(System.in);
-    
+
         System.out.print("Enter the location: ");
         String newLocation = scanner.nextLine();
-    
-        System.out.println("Enter the disaster type: ");
+
+        System.out.print("Enter the disaster type: ");
         String newDisasterType = scanner.nextLine();
-    
+
         System.out.print("Enter the population size: ");
         int newPopSize = scanner.nextInt();
         scanner.nextLine(); // Consume newline
-    
-        // Dynamically extend arrays
-        location = addToArray(location, newLocation);
-        disasterType = addToArray(disasterType, newDisasterType);
-        popSize = addToIntArray(popSize, newPopSize);
-    
+
+        // Save the new details to the file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\Francine\\OneDrive\\Desktop\\Pleaseeeee\\Last-OOP\\DisasterDetails.txt", true))) {
+            writer.write(newLocation + "|" + newDisasterType + "|" + newPopSize);
+            writer.newLine();
+        } catch (IOException e) {
+            System.out.println("Error saving disaster details: " + e.getMessage());
+        }
+
         System.out.println("Disaster details added successfully.");
     }
     
-    // Helper method to add a string to a string array
-    private String[] addToArray(String[] array, String newElement) {
-        if (array == null) {
-            return new String[]{newElement};
-        }
-        String[] newArray = Arrays.copyOf(array, array.length + 1);
-        newArray[newArray.length - 1] = newElement;
-        return newArray;
-    }
-    
-    // Helper method to add an integer to an int array
-    private int[] addToIntArray(int[] array, int newElement) {
-        if (array == null) {
-            return new int[]{newElement};
-        }
-        int[] newArray = Arrays.copyOf(array, array.length + 1);
-        newArray[newArray.length - 1] = newElement;
-        return newArray;
-    }
-    
 
-    public void displayInventories(){
+    public void displayInventories() {
+        String donorFilePath = "C:\\Users\\Francine\\OneDrive\\Desktop\\Pleaseeeee\\Last-OOP\\DonorInfo.txt";
+    String disasterFilePath = "C:\\Users\\Francine\\OneDrive\\Desktop\\Pleaseeeee\\Last-OOP\\DisasterDetails.txt";
+    Map<String, Integer> supplies = new LinkedHashMap<>();
+    List<Integer> popSizes = new ArrayList<>();
 
-        if (food == 0 || water == 0 || medicalSupplies == 0 || clothing == 0) {
-        System.out.println("There are no relief goods supplies stored at the moment.");
+    // Step 1: Read supplies from the donor file
+    try (BufferedReader reader = new BufferedReader(new FileReader(donorFilePath))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            line = line.trim();
+            if (line.startsWith("- ")) { // Example: "- Food: 1000"
+                String[] parts = line.split(":");
+                String item = parts[0].replace("- ", "").trim(); // Extract item name
+                int quantity = Integer.parseInt(parts[1].trim()); // Extract quantity
+                supplies.put(item, quantity);
+            }
+        }
+    } catch (IOException e) {
+        System.out.println("Error reading the donor file: " + e.getMessage());
         return;
     }
 
+    // Step 2: Read population sizes from the disaster file
+    try (BufferedReader reader = new BufferedReader(new FileReader(disasterFilePath))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] details = line.split("\\|");
+            if (details.length == 3) {
+                int population = Integer.parseInt(details[2].trim());
+                popSizes.add(population);
+            }
+        }
+    } catch (IOException e) {
+        System.out.println("Error reading the disaster file: " + e.getMessage());
+        return;
+    }
+
+    // Check if supplies or population sizes are empty
+    if (supplies.isEmpty()) {
+        System.out.println("There are no relief goods supplies stored at the moment.");
+        return;
+    }
+    if (popSizes.isEmpty()) {
+        System.out.println("There are no recorded disasters with population sizes at the moment.");
+        return;
+    }
+
+    // Population size ranges
     int[][] ranges = {
-        {100, 1000},{1001, 5000},{5001, 10000},{10001, 15000},{15001, 20000},{20001, 25000},{25001, 30000},{30001, 35000},{35001, 40000},{40001, 45000},{45001, 50000},
-        {50001, 55000},{55001, 60000},{60001, 65000},{65001, 70000},{70001, 75000},{75001, 80000},{80001, 85000},{85001, 90000},{90001, 95000},{95001, 100000}
+        {100, 1000}, {1001, 5000}, {5001, 10000}, {10001, 15000},
+        {15001, 20000}, {20001, 25000}, {25001, 30000}
     };
 
     System.out.println("\n=======================================");
     System.out.println("|      RANGES OF POPULATION SIZE      |");
     System.out.println("=======================================");
 
-    for (int i = 0; i < ranges.length; i++) { 
-        int min = ranges[i][0];
-        int max = ranges[i][1];
-        System.out.println(String.format("|             %3d - %3d               |", min, max));
+    for (int[] range : ranges) {
+        int min = range[0];
+        int max = range[1];
+        System.out.println(String.format("|             %5d - %5d           |", min, max));
     }
-    
-    
+
     System.out.println("=======================================");
 
-    System.out.println(" ");
     System.out.println("\n============================================================================================================================================================================");
     System.out.println("|                                                                      RELIEF GOODS AND SUPPLIES                                                                           |");
     System.out.println("============================================================================================================================================================================");
     System.out.println("|     No. of Affected Citizens  |       Foods       |      Water       |   Medical Supplies  |     Clothing     |            Others             |           Status         |");
     System.out.println("============================================================================================================================================================================");
 
-    int othersIndex = 0;
-
-    for (int i = 0; i < popSize.length; i++) { 
-        int pop = popSize[i]; 
-        
-        int min = ranges[i][0];
-        int max = ranges[i][1];
-
-        String status = (pop >= min && pop <= max) ? "Sufficient" : "Insufficient"; 
-        String othersValue = othersIndex < others.length ? others[othersIndex] : ""; 
-        System.out.println(String.format("|             %3d               |        %3d       |       %3d       |         %3d        |       %3d       |     %21s     |      %15s     |", 
-        pop, food, water, medicalSupplies, clothing, othersValue, status));
-        
-        othersIndex++; 
-    }
-
-    System.out.println("============================================================================================================================================================================");
-    System.out.println("");
+    for (int pop : popSizes) {
+        // Dynamically get supply quantities
+        int food = supplies.getOrDefault("Food", 0);
+        int water = supplies.getOrDefault("Water", 0);
+        int medicalSupplies = supplies.getOrDefault("Medical Supplies", 0);
+        int clothing = supplies.getOrDefault("Clothing", 0);
+        int others = supplies.getOrDefault("Others", 0);
+    
+        String status = (food >= pop && water >= pop && medicalSupplies >= pop && clothing >= pop && others >= pop) ? "Sufficient" : "Insufficient";
+    
+            System.out.println(String.format("|             %5d             |        %5d      |      %5d       |        %5d        |       %5d      |     %21d     |      %15s     |",
+                    pop, food, water, medicalSupplies, clothing, others, status));
+        }
     }
     
      
-    public void displayVolunteers(String filePath, String type){
-        try (BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\Francine\\OneDrive\\Desktop\\Pleaseeeee\\Last-OOP\\DonorInfo.txt"))) {
+    public void displayVolunteers(String filePath){
+        try (BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\Francine\\OneDrive\\Desktop\\Pleaseeeee\\Last-OOP\\VolunteerDatabase.txt"))) {
             String line;
-            boolean donorFound = false;
-
+        
             System.out.println("===================================================================================");
             System.out.println("|                                 LIST OF VOLUNTEERS                              |");
             System.out.println("===================================================================================");
-
+    
             while ((line = reader.readLine()) != null) {
-                if (line.contains("Volunteer Type: " + type)) {
-                    donorFound = true;
-
-                    // Print donor details
-                    System.out.println(line); // Volunteer Type line
-                    while ((line = reader.readLine()) != null && !line.startsWith("Volunteer Type:")) {
-                        System.out.println(line); // Print each subsequent line until the next "Volunteer Type" or EOF
-                    }
-
-                    System.out.println("===================================================================================");
-                }
+                System.out.println(line); 
             }
-
-            if (!donorFound) {
-                System.out.println("No " + type + " donors found.");
-            }
+    
+            System.out.println("===================================================================================");
         } catch (IOException e) {
-            System.out.println("Error reading the donor information file.");
+            System.out.println("Error reading the volunteer information file.");
             e.printStackTrace();
         }
+
     }
 
     public void displayDonors(String filePath, String type){    
-        try (BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\Francine\\OneDrive\\Desktop\\Pleaseeeee\\Last-OOP\\DonorInfo.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             boolean donorFound = false;
     
@@ -369,7 +397,9 @@ public void transactions() {
                     // Print donor details
                     System.out.println(line); // Donation Type line
                     while ((line = reader.readLine()) != null && !line.startsWith("Donation Type:")) {
-                        System.out.println(line); // Print each subsequent line until the next "Donation Type" or EOF
+                        if (!line.trim().isEmpty()) { // Skip empty lines
+                            System.out.println(line); // Print each subsequent line
+                        }
                     }
     
                     System.out.println("------------------------------------------------------------------");
@@ -398,21 +428,8 @@ public class FacilitatorInfo{
 
         Facilitator facilitator = new Facilitator("Francine", 1234, args, args, null, 0);
 
-        while (true) {
-            if (facilitator != null) {
-                System.out.println("Hello, facilitator " + facilitator.getFacilitatorName() + "!");
-
-                while (true) {
-                    System.out.println("Please enter your PIN number: ");
-                    int pin = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline
-
-                    if (facilitator.getPin() == pin) {
-                        break; // Exit PIN entry loop once PIN is correct
-                    } else {
-                        System.out.println("Incorrect PIN. Please try again.");
-                    }
-                }
+     
+            
 
                 while (true) {
                     System.out.println("\n====================================================================================================");
@@ -453,10 +470,10 @@ public class FacilitatorInfo{
                     } else if (!response.equals("yes")) {
                         System.out.println("Invalid input. Returning to the dashboard.");
                     }
-                }
-            }
-        }                
+        }
+            
+    }                
         
-    }
-
 }
+
+

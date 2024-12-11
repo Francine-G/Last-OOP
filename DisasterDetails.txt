@@ -1,0 +1,2 @@
+Negros|Volcanic Eruption|10000
+Manila|Storm Surge|1500
