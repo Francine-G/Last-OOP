@@ -34,7 +34,7 @@ public void transactions() {
     Scanner scanner = new Scanner(System.in);
 
     System.out.println("==================================================================================================================================================");
-    System.out.println("                                                  ENTER TRANSACTION                                             ");
+    System.out.println("                                                  OPERATIONS DASHBOARD                                             ");
     System.out.println("    |===== 1. See Donors & Volunteers =====|    |===== 2. View Donations =====|    |===== 3. Create Transaction  =====|    |===== 4. Cancel =====|");
     System.out.println("==================================================================================================================================================");
 
@@ -358,9 +358,9 @@ public class FacilitatorInfo{
                 while (true) {
                     System.out.println("\n====================================================================================================");
                     System.out.println("                                        FACILITATOR DASHBOARD                            ");
-                    System.out.println("        |===== 1. View Transactions =====|                  |===== 2. View Inventories =====|");
-                    System.out.println("      |===== 3. View Disaster Reports =====|            |===== 4. View Volunteers & Donors=====|");
-                    System.out.println("                         |===== 5. Add Disaster Details =====|                                  ");
+                    System.out.println("        |===== 1. View Operations =====|                  |===== 2. View Inventories =====|");
+                    System.out.println("      |===== 3. View Disaster Reports =====|            |===== 4. Add Disaster Details =====| |");
+                    System.out.println("                                                          ");
                     System.out.println("=====================================================================================================");
                     System.out.println(" ");
                 
@@ -379,9 +379,6 @@ public class FacilitatorInfo{
                             facilitator.displayDisasterDetails();
                             break;
                         case 4:
-                            facilitator.transactions();
-                            break;
-                        case 5: // Add Disaster Details
                             facilitator.addDisasterDetails();
                             break;
                         default:
