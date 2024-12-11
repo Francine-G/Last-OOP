@@ -1,8 +1,55 @@
-import java.util.*;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.*;
+
+class InKindSupportItem {
+    private String itemType;
+    private int quantity;
+
+    public InKindSupportItem(String itemType, int quantity) {
+        this.itemType = itemType;
+        this.quantity = quantity;
+    }
+
+    public String getItemType() {
+        return itemType;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+}
+
+class FoodQty extends InKindSupportItem {
+    public FoodQty(int quantity) {
+        super("Food", quantity);
+    }
+}
+
+class ClothingQty extends InKindSupportItem {
+    public ClothingQty(int quantity) {
+        super("Clothing", quantity);
+    }
+}
+
+class MedicalSuppliesQty extends InKindSupportItem {
+    public MedicalSuppliesQty(int quantity) {
+        super("Medical Supplies", quantity);
+    }
+}
+
+class WaterQty extends InKindSupportItem {
+    public WaterQty(int quantity) {
+        super("Water", quantity);
+    }
+}
+
+class OthersQty extends InKindSupportItem {
+    public OthersQty(int quantity) {
+        super("Others", quantity);
+    }
+}
 
 class Donor {
     private int transactionChoice;
@@ -12,10 +59,9 @@ class Donor {
     private String donorEmail;
     private String donationType;
     private String accountName;
-    private String accountNumber;  
+    private String accountNumber;
     private int cashDonationAmount;
-    private String[] inKindSupportItems = new String[5];  
-    private int[] inKindSupportQuantities = new int[5];     
+    private List<InKindSupportItem> inKindSupportItems = new ArrayList<>();
 
     public void setUserDetails(int transactionChoice, String donorName, String donationType, String accountName, String accountNumber, int cashDonationAmount) {
         this.transactionChoice = transactionChoice;
@@ -33,9 +79,8 @@ class Donor {
         this.donorEmail = donorEmail;
     }
 
-    public void addInKindSupportItem(int index, String itemType, int quantity) {
-        inKindSupportItems[index] = itemType;
-        inKindSupportQuantities[index] = quantity;
+    public void addInKindSupportItem(InKindSupportItem item) {
+        inKindSupportItems.add(item);
     }
 
     public void donationProcess() {
@@ -52,29 +97,27 @@ class Donor {
         if (donationType.equals("In-Kind Support")) {
             System.out.println("In-Kind Support Breakdown:");
             int totalQuantity = 0;
-            for (int i = 0; i < inKindSupportItems.length; i++) {
-                if (inKindSupportItems[i] != null) {
-                    System.out.println(inKindSupportItems[i] + ": " + inKindSupportQuantities[i]);
-                    totalQuantity += inKindSupportQuantities[i];
-                }
+            for (InKindSupportItem item : inKindSupportItems) {
+                System.out.println(item.getItemType() + ": " + item.getQuantity());
+                totalQuantity += item.getQuantity();
             }
             System.out.println("Total Items Donated: " + totalQuantity);
         } else if (donationType.equals("Cash")) {
             System.out.println("Cash Donation Breakdown:");
-            System.out.println("Amount Donated: P" + cashDonationAmount);  
+            System.out.println("Amount Donated: P" + cashDonationAmount);
         }
-        
+
         if (donationType.equals("Cash")) {
             System.out.println("Account Name: " + accountName);
             System.out.println("Account Number: " + accountNumber);
-        }      
+        }
+
         System.out.println("");
         System.out.println("                   AGAIN, THANK YOU FOR YOUR GENEROSITY!                        ");
         System.out.println("        A copy of your receipt will be sent to your email very shortly.         ");
         System.out.println("==============================================================================\n");
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\Francine\\OneDrive\\Desktop\\Pleaseeeee\\Last-OOP\\DonorInfo.txt", true))) {
-            
             writer.write("Donor Name: " + donorName + "\n");
             writer.write("Donor Address: " + donorAddress + "\n");
             writer.write("Donor Contact: " + donorContact + "\n");
@@ -87,10 +130,8 @@ class Donor {
                 writer.write("Account Number: " + accountNumber + "\n");
             } else if (donationType.equals("In-Kind Support")) {
                 writer.write("In-Kind Support Details:\n");
-                for (int i = 0; i < inKindSupportItems.length; i++) {
-                    if (inKindSupportItems[i] != null) {
-                        writer.write("- " + inKindSupportItems[i] + ": " + inKindSupportQuantities[i] + "\n");
-                    }
+                for (InKindSupportItem item : inKindSupportItems) {
+                    writer.write("- " + item.getItemType() + ": " + item.getQuantity() + "\n");
                 }
             }
             writer.write("==============================================================================\n");
@@ -113,7 +154,7 @@ public class DonorInfo {
             System.out.println("    |===== 1. Donate =====|                   |===== 2. Cancel =====|");
             System.out.println("==============================================================================");
             System.out.print("Enter your choice: ");
-            
+
             int transactionChoice;
             try {
                 transactionChoice = Integer.parseInt(scanner.nextLine());
@@ -154,7 +195,7 @@ public class DonorInfo {
             System.out.println("    |===== 1. Cash =====|                   |===== 2. In-Kind Support =====|");
             System.out.println("==============================================================================");
             System.out.print("Enter Type of Donation: ");
-            
+
             String donationType = "";
             int donationTypeChoice;
             try {
@@ -182,11 +223,11 @@ public class DonorInfo {
                     System.out.println("==============================================================================");
                     System.out.println("                   MAKE A DIFFERENCE TODAY!                    ");
                     System.out.println("Your support helps us bring positive change to those in need.\n"
-                    + "By donating, you contribute to initiatives that uplift communities, \n" 
-                    + "offer resources, and create lasting impacts. Together, we can build a brighter future");
+                            + "By donating, you contribute to initiatives that uplift communities, \n"
+                            + "offer resources, and create lasting impacts. Together, we can build a brighter future");
                     System.out.println("==============================================================================");
                     System.out.println("");
-                    
+
                     System.out.println("What type of In-Kind support would you like to donate?");
                     System.out.println("1. Food");
                     System.out.println("2. Water");
@@ -234,7 +275,25 @@ public class DonorInfo {
                         continue;
                     }
 
-                    donor.addInKindSupportItem(index, inKindSupportType, quantity);
+                    InKindSupportItem item = null;
+                    switch (inKindSupportType) {
+                        case "Food":
+                            item = new FoodQty(quantity);
+                            break;
+                        case "Water":
+                            item = new WaterQty(quantity);
+                            break;
+                        case "Medical Supplies":
+                            item = new MedicalSuppliesQty(quantity);
+                            break;
+                        case "Clothing":
+                            item = new ClothingQty(quantity);
+                            break;
+                        case "Others":
+                            item = new OthersQty(quantity);
+                            break;
+                    }
+                    donor.addInKindSupportItem(item);
                     index++;
 
                     System.out.print("Would you like to add more items? (yes/no): ");
@@ -256,8 +315,8 @@ public class DonorInfo {
             System.out.println("==============================================================================");
             System.out.println("                   MAKE A DIFFERENCE TODAY!                    ");
             System.out.println("Your support helps us bring positive change to those in need.\n"
-            + "By donating, you contribute to initiatives that uplift communities, \n" 
-            + "offer resources, and create lasting impacts. Together, we can build a brighter future");
+                    + "By donating, you contribute to initiatives that uplift communities, \n"
+                    + "offer resources, and create lasting impacts. Together, we can build a brighter future");
             System.out.println("==============================================================================");
             System.out.println("");
 
@@ -278,7 +337,7 @@ public class DonorInfo {
             System.out.println("| 8. Enter other denomination       |");
             System.out.println("=====================================");
             System.out.print("Please choose an amount: ");
-            
+
             int cashDonationAmount;
             try {
                 int amountChoice = Integer.parseInt(scanner.nextLine());
