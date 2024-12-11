@@ -16,7 +16,7 @@ class Facilitator{
     private int water;
     private int medicalSupplies;
     private int clothing;
-    private int others;
+    private String[] others;
 
 
 
@@ -60,13 +60,13 @@ public void transactions() {
                         System.out.println("\nList of In-Kind Donors:");
                         System.out.printf("%-5s | %-30s\n", "No.", "Donor Name");
                         System.out.println("-------------------------------------");
-                        displayDonors("C:\\Users\\Francine\\OneDrive\\Desktop\\2nd Year 1st Sem\\OOP-Project\\DonorDisplay.txt", "In-Kind Support");
+                        displayDonors("C:\\Users\\Francine\\OneDrive\\Desktop\\Pleaseeeee\\Last-OOP\\DonorInfo.txt", "In-Kind Support");
 
                     } else if (donorChoice == 2) {
                         System.out.println("\nList of Cash Donors:");
                         System.out.printf("%-5s | %-30s\n", "No.", "Donor Name");
                         System.out.println("-------------------------------------");
-                        displayDonors("C:\\Users\\Francine\\OneDrive\\Desktop\\2nd Year 1st Sem\\OOP-Project\\DonorDisplay.txt", "Cash");
+                        displayDonors("C:\\Users\\Francine\\OneDrive\\Desktop\\Pleaseeeee\\Last-OOP\\DonorInfo.txt", "Cash");
                     } else {
                         System.out.println("\nInvalid choice. Returning to main menu...");
                     }
@@ -212,26 +212,30 @@ public void transactions() {
             return;
         }
         
-        System.out.println("\n======================================================================");
-        System.out.println("         Location              Disaster             Population Size     ");
-        System.out.println("======================================================================");
+        System.out.println("\n=====================================================================================");
+        System.out.println("|         Location        |          Disaster            |       Population Size    | ");
+        System.out.println("=====================================================================================");
 
-        for(int i = 0; i < location.length && i < disasterType.length && i < popSize.length; i++){
-            System.out.println("         " +location[i] + "              " + disasterType[i] + "             " + popSize[i] + "     " );
+        for (int i = 0; i < location.length && i < disasterType.length && i < popSize.length; i++) {
+            System.out.printf("%-25s %-28s %-29s|%n", "|          " + location[i], "|          " + disasterType[i], "  |          " + popSize[i]);
+
         }
+
+        System.out.println("=====================================================================================");
+        System.out.println("");
         
     }
 
     public void addDisasterDetails() {
         Scanner scanner = new Scanner(System.in);
     
-        System.out.println("Enter the location: ");
+        System.out.print("Enter the location: ");
         String newLocation = scanner.nextLine();
     
         System.out.println("Enter the disaster type: ");
         String newDisasterType = scanner.nextLine();
     
-        System.out.println("Enter the population size: ");
+        System.out.print("Enter the population size: ");
         int newPopSize = scanner.nextInt();
         scanner.nextLine(); // Consume newline
     
@@ -271,31 +275,86 @@ public void transactions() {
         return;
     }
 
-        System.out.println(" ");
-        System.out.println("\n=======================================================================================================================================================");
-        System.out.println("                                                       RELIEF GOODS SUPPLIES                                ");
-        System.out.println("=======================================================================================================================================================");
-        System.out.println("Range of Size            Citizens Affected             Foods             Water             Medical Supplies             Clothing             Status");
-        System.out.println("=======================================================================================================================================================");
-        System.out.println(" ");
+    int[][] ranges = {
+        {100, 1000},{1001, 5000},{5001, 10000},{10001, 15000},{15001, 20000},{20001, 25000},{25001, 30000},{30001, 35000},{35001, 40000},{40001, 45000},{45001, 50000},
+        {50001, 55000},{55001, 60000},{60001, 65000},{65001, 70000},{70001, 75000},{75001, 80000},{80001, 85000},{85001, 90000},{90001, 95000},{95001, 100000}
+    };
 
-        for(int i = 0; i < popSize.length; i++){
-            if  (10 < popSize[i] && popSize[i] < 20){
-                System.out.println("10-20" + "             "+ popSize[i] + "             " + food + "             " + water + "             " + medicalSupplies + "             " + clothing + "             " + "Sufficient");
-            } else {
-                System.out.println("10-20" + "             "+ popSize[i] + "             " + food + "             " + water + "             " + medicalSupplies + "             " + clothing + "             " + "Insufficient");
-            }
+    System.out.println("\n=======================================");
+    System.out.println("|      RANGES OF POPULATION SIZE      |");
+    System.out.println("=======================================");
 
-        }
+    for (int i = 0; i < ranges.length; i++) { 
+        int min = ranges[i][0];
+        int max = ranges[i][1];
+        System.out.println(String.format("|             %3d - %3d               |", min, max));
+    }
+    
+    
+    System.out.println("=======================================");
+
+    System.out.println(" ");
+    System.out.println("\n============================================================================================================================================================================");
+    System.out.println("|                                                                      RELIEF GOODS AND SUPPLIES                                                                           |");
+    System.out.println("============================================================================================================================================================================");
+    System.out.println("|     No. of Affected Citizens  |       Foods       |      Water       |   Medical Supplies  |     Clothing     |            Others             |           Status         |");
+    System.out.println("============================================================================================================================================================================");
+
+    int othersIndex = 0;
+
+    for (int i = 0; i < popSize.length; i++) { 
+        int pop = popSize[i]; 
+        
+        int min = ranges[i][0];
+        int max = ranges[i][1];
+
+        String status = (pop >= min && pop <= max) ? "Sufficient" : "Insufficient"; 
+        String othersValue = othersIndex < others.length ? others[othersIndex] : ""; 
+        System.out.println(String.format("|             %3d               |        %3d       |       %3d       |         %3d        |       %3d       |     %21s     |      %15s     |", 
+        pop, food, water, medicalSupplies, clothing, othersValue, status));
+        
+        othersIndex++; 
+    }
+
+    System.out.println("============================================================================================================================================================================");
+    System.out.println("");
     }
     
      
-    public void displayVolunteers(){
-       
+    public void displayVolunteers(String filePath, String type){
+        try (BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\Francine\\OneDrive\\Desktop\\Pleaseeeee\\Last-OOP\\DonorInfo.txt"))) {
+            String line;
+            boolean donorFound = false;
+
+            System.out.println("===================================================================================");
+            System.out.println("|                                 LIST OF VOLUNTEERS                              |");
+            System.out.println("===================================================================================");
+
+            while ((line = reader.readLine()) != null) {
+                if (line.contains("Volunteer Type: " + type)) {
+                    donorFound = true;
+
+                    // Print donor details
+                    System.out.println(line); // Volunteer Type line
+                    while ((line = reader.readLine()) != null && !line.startsWith("Volunteer Type:")) {
+                        System.out.println(line); // Print each subsequent line until the next "Volunteer Type" or EOF
+                    }
+
+                    System.out.println("===================================================================================");
+                }
+            }
+
+            if (!donorFound) {
+                System.out.println("No " + type + " donors found.");
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading the donor information file.");
+            e.printStackTrace();
+        }
     }
 
     public void displayDonors(String filePath, String type){    
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\Francine\\OneDrive\\Desktop\\Pleaseeeee\\Last-OOP\\DonorInfo.txt"))) {
             String line;
             boolean donorFound = false;
     
@@ -357,10 +416,10 @@ public class FacilitatorInfo{
 
                 while (true) {
                     System.out.println("\n====================================================================================================");
-                    System.out.println("                                        FACILITATOR DASHBOARD                            ");
-                    System.out.println("        |===== 1. View Operations =====|                  |===== 2. View Inventories =====|");
-                    System.out.println("      |===== 3. View Disaster Reports =====|            |===== 4. Add Disaster Details =====| |");
-                    System.out.println("                                                          ");
+                    System.out.println("                                       FACILITATOR DASHBOARD                                         ");
+                    System.out.println("     |=====    1. View Operations   =====|            |====      2. View Inventories    ====|        ");
+                    System.out.println("     |====  3. View Disaster Reports ====|            |====== 4. Add Disaster Details ======|        ");
+                    System.out.println("                            |====            5. Exit          ====|                                  ");
                     System.out.println("=====================================================================================================");
                     System.out.println(" ");
                 

@@ -73,7 +73,7 @@ class Donor {
         System.out.println("        A copy of your receipt will be sent to your email very shortly.         ");
         System.out.println("==============================================================================\n");
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\Francine\\OneDrive\\Desktop\\2nd Year 1st Sem\\OOP-Project\\DonorDisplay.txt", true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\Francine\\OneDrive\\Desktop\\Pleaseeeee\\Last-OOP\\DonorInfo.txt", true))) {
             
             writer.write("Donor Name: " + donorName + "\n");
             writer.write("Donor Address: " + donorAddress + "\n");
