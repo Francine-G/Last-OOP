@@ -6,104 +6,104 @@ import java.io.IOException;
 import java.util.*;
 
 class Facilitator{
-    private String facilitatorName;
-    private int pin;
-    private String[] location;
-    private String[] disasterType;
-    private int[] popSize;
-    private double donatedCash;
-    private int food;
-    private int water;
-    private int medicalSupplies;
-    private int clothing;
-    private String[] others;
-
-
-
-    public Facilitator(String facilitatorName, int pin, String[] location, String[] disasterType, int[] popSize, double donatedCash){
-        this.facilitatorName = facilitatorName;
-        this.pin = pin;
-        this.location = location;
-        this.disasterType = disasterType;
-        this.popSize = popSize;
-        this.donatedCash = donatedCash;
-
-    }
-
-public void transactions() {
-    Scanner scanner = new Scanner(System.in);
-
-    System.out.println("==================================================================================================================================================");
-    System.out.println("                                                  OPERATIONS DASHBOARD                                             ");
-    System.out.println("    |===== 1. See Donors & Volunteers =====|    |===== 2. View Donations =====|    |===== 3. Create Transaction  =====|    |===== 4. Cancel =====|");
-    System.out.println("==================================================================================================================================================");
-
-    System.out.print("Enter your choice (1-4): ");
-    int choice = scanner.nextInt();
-    scanner.nextLine(); // Consume newline
-
-    switch (choice) {
-        case 1: // See Donors & Volunteers
-            System.out.println("\n|===== 1. View List of Donors =====|    |===== 2. View List of Volunteers =====|");
-            System.out.print("Enter your choice (1 or 2): ");
-            int subChoice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
-            
-            switch (subChoice) {
-                case 1: // View List of Donors
-                    System.out.println("\n|===== 1. In-Kind =====|    |===== 2. Cash =====|");
-                    System.out.print("Enter your choice (1 or 2): ");
-                    int donorChoice = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline
-
-                    if (donorChoice == 1) {
-                        System.out.println("\nList of In-Kind Donors:");
-                        System.out.printf("%-5s | %-30s\n", "No.", "Donor Name");
-                        System.out.println("-------------------------------------");
-                        displayDonors("C:\\Users\\Francine\\OneDrive\\Desktop\\Pleaseeeee\\Last-OOP\\DonorInfo.txt", "In-Kind Support");
-
-                    } else if (donorChoice == 2) {
-                        System.out.println("\nList of Cash Donors:");
-                        System.out.printf("%-5s | %-30s\n", "No.", "Donor Name");
-                        System.out.println("-------------------------------------");
-                        displayDonors("C:\\Users\\Francine\\OneDrive\\Desktop\\Pleaseeeee\\Last-OOP\\DonorInfo.txt", "Cash");
-                    } else {
-                        System.out.println("\nInvalid choice. Returning to main menu...");
-                    }
-                    break;
-
-                case 2: // View List of Volunteers
-                    System.out.println("\nList of Volunteers:");
-                    System.out.printf("%-5s | %-20s | %-20s | %-20s\n", "No.", "Name", "Contact Info", "Preferred Location");
-                    System.out.println("-------------------------------------------------------------------------------");
-                    break;
-
-                default:
-                    System.out.println("\nInvalid choice. Returning to main menu...");
-                    break;
-            }
-            break;
-
-        case 2: // View Donations
-            System.out.println("\n|===== 1. Check Cash Balance =====|    |===== 2. Check Supplies Balance =====|");
-            System.out.print("Enter your choice (1 or 2): ");
-            int donationChoice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
-
-            if (donationChoice == 1) {
-                System.out.printf("\nTotal Cash Balance: %.2f\n");
-            } else if (donationChoice == 2) {
-                System.out.println("\nSupplies Balance:");
-                System.out.printf("%-20s | %-10s\n", "Item", "Quantity");
-                System.out.println("-----------------------------------");
+        private String facilitatorName;
+        private int pin;
+        private String[] location;
+        private String[] disasterType;
+        private int[] popSize;
+        private double donatedCash;
+        private int food;
+        private int water;
+        private int medicalSupplies;
+        private int clothing;
+        private String[] others;
+    
+    
+    
+        public Facilitator(String facilitatorName, int pin, String[] location, String[] disasterType, int[] popSize, double donatedCash){
+            this.facilitatorName = facilitatorName;
+            this.pin = pin;
+            this.location = location;
+            this.disasterType = disasterType;
+            this.popSize = popSize;
+            this.donatedCash = donatedCash;
+    
+        }
+    
+    public void transactions() {
+        Scanner scanner = new Scanner(System.in);
+    
+        System.out.println("==================================================================================================================================================");
+        System.out.println("                                                  OPERATIONS DASHBOARD                                             ");
+        System.out.println("    |===== 1. See Donors & Volunteers =====|    |===== 2. View Donations =====|    |===== 3. Create Transaction  =====|    |===== 4. Cancel =====|");
+        System.out.println("==================================================================================================================================================");
+    
+        System.out.print("Enter your choice (1-4): ");
+        int choice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+    
+        switch (choice) {
+            case 1: // See Donors & Volunteers
+                System.out.println("\n|===== 1. View List of Donors =====|    |===== 2. View List of Volunteers =====|");
+                System.out.print("Enter your choice (1 or 2): ");
+                int subChoice = scanner.nextInt();
+                scanner.nextLine(); // Consume newline
                 
-            } else {
-                System.out.println("\nInvalid choice. Returning to main menu...");
-            }
-            break;
-
-        case 3: //trasaction process
-            processTransactions(100, 200, 3100, 500, 71);
+                switch (subChoice) {
+                    case 1: // View List of Donors
+                        System.out.println("\n|===== 1. In-Kind =====|    |===== 2. Cash =====|");
+                        System.out.print("Enter your choice (1 or 2): ");
+                        int donorChoice = scanner.nextInt();
+                        scanner.nextLine(); // Consume newline
+    
+                        if (donorChoice == 1) {
+                            System.out.println("\nList of In-Kind Donors:");
+                            System.out.printf("%-5s | %-30s\n", "No.", "Donor Name");
+                            System.out.println("-------------------------------------");
+                            displayDonors("C:\Users\Francine\OneDrive\Desktop\Pleaseeeee\Last-OOP\DonorInfo.txt", "In-Kind Support");
+    
+                        } else if (donorChoice == 2) {
+                            System.out.println("\nList of Cash Donors:");
+                            System.out.printf("%-5s | %-30s\n", "No.", "Donor Name");
+                            System.out.println("-------------------------------------");
+                            displayDonors("C:\Users\Francine\OneDrive\Desktop\Pleaseeeee\Last-OOP\DonorInfo.txt", "Cash");
+                        } else {
+                            System.out.println("\nInvalid choice. Returning to main menu...");
+                        }
+                        break;
+    
+                    case 2: // View List of Volunteers
+                        System.out.println("\nList of Volunteers:");
+                        System.out.printf("%-5s | %-20s | %-20s | %-20s\n", "No.", "Name", "Contact Info", "Preferred Location");
+                        System.out.println("-------------------------------------------------------------------------------");
+                        break;
+    
+                    default:
+                        System.out.println("\nInvalid choice. Returning to main menu...");
+                        break;
+                }
+                break;
+    
+            case 2: // View Donations
+                System.out.println("\n|===== 1. Check Cash Balance =====|    |===== 2. Check Supplies Balance =====|");
+                System.out.print("Enter your choice (1 or 2): ");
+                int donationChoice = scanner.nextInt();
+                scanner.nextLine(); // Consume newline
+    
+                if (donationChoice == 1) {
+                    System.out.printf("\nTotal Cash Balance: %.2f\n");
+                } else if (donationChoice == 2) {
+                    System.out.println("\nSupplies Balance:");
+                    System.out.printf("%-20s | %-10s\n", "Item", "Quantity");
+                    System.out.println("-----------------------------------");
+                    
+                } else {
+                    System.out.println("\nInvalid choice. Returning to main menu...");
+                }
+                break;
+    
+            case 3: //trasaction process
+            
        
         case 4: // Cancel
             System.out.println("\nTransaction canceled. Returning to main menu...");
@@ -115,7 +115,7 @@ public void transactions() {
     }
 }
 
-    public void processTransactions(int food, int water, int medicalSupplies, int clothing, int others){
+    public void processTransactions(int FoodQtyd, int WaterQty, int MedicalSuppliesQty, int ClothingQty, int OthersQty){
     Scanner scanner = new Scanner (System.in);
         while (true) {
             System.out.println(" ");
@@ -134,44 +134,44 @@ public void transactions() {
 
         switch (supplyType){
             case 1: //foods
-                if (supplyQuantity <= food){
-                    food -= supplyQuantity; 
-                    System.out.println("You have withdrawn " + supplyQuantity + " from food, " + "remaining supplies: " + food );
+                if (supplyQuantity <= FoodQtyd){
+                    FoodQtyd -= supplyQuantity; 
+                    System.out.println("You have withdrawn " + supplyQuantity + " from food, " + "remaining supplies: " + FoodQtyd );
                 }else{
                         System.out.println("Insufficient Supplies");
                     }
                     break;
             case 2: //water
-                if (supplyQuantity <= water){
-                    water -= supplyQuantity;
-                    System.out.println("You have withdrawn " + supplyQuantity + " from water, " + "remaining supplies: " + water);
+                if (supplyQuantity <= WaterQty){
+                    WaterQty -= supplyQuantity;
+                    System.out.println("You have withdrawn " + supplyQuantity + " from water, " + "remaining supplies: " + WaterQty);
                 }else{
                         System.out.println("Insufficient Supplies");
                     }
                     break;
 
             case 3: //medical supplies
-                if (supplyQuantity <= medicalSupplies){
-                    medicalSupplies -= supplyQuantity; 
-                    System.out.println("You have withdrawn " + supplyQuantity + " from medical supplies, " + "remaining supplies: " + medicalSupplies);
+                if (supplyQuantity <= MedicalSuppliesQty){
+                    MedicalSuppliesQty -= supplyQuantity; 
+                    System.out.println("You have withdrawn " + supplyQuantity + " from medical supplies, " + "remaining supplies: " + MedicalSuppliesQty);
                 }else{
                     System.out.println("Insufficient Supplies");
                     }
                     break;
 
             case 4: //clothing
-                    if (supplyQuantity <= clothing){
-                    clothing -= supplyQuantity; 
-                    System.out.println("You have withdrawn " + supplyQuantity + " from clothing, " + " remaining supplies: " + clothing);
+                    if (supplyQuantity <= ClothingQty){
+                    ClothingQty -= supplyQuantity; 
+                    System.out.println("You have withdrawn " + supplyQuantity + " from clothing, " + " remaining supplies: " + ClothingQty);
                 }else{
                     System.out.println("Insufficient Supplies");
                     }
                     break;
 
             case 5: //others
-                if (supplyQuantity <= others){
-                    others -= supplyQuantity; 
-                    System.out.println("You have withdrawn " + supplyQuantity +  " from others, " + "remaining supplies: " + others);
+                if (supplyQuantity <= OthersQty){
+                    OthersQty -= supplyQuantity; 
+                    System.out.println("You have withdrawn " + supplyQuantity +  " from others, " + "remaining supplies: " + OthersQty);
                 }else{
                     System.out.println("Insufficient Supplies");
                 }
