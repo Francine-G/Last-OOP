@@ -1,0 +1,19 @@
+
+Donor Name: Francine
+Donor Address: Cabatuan
+Donor Contact: 09159240574
+Donor Email: francine@gmail.com
+Donation Type: Cash
+Cash Amount: P2000
+Account Name: Francine Luces
+Account Number: 156879634478
+==============================================================================
+Donor Name: Ianna  Beray
+Donor Address: Molo
+Donor Contact: 45879332564
+Donor Email: ianna@gmail.com
+Donation Type: In-Kind Support
+In-Kind Support Details:
+- Food: 100
+- Clothing: 50
+==============================================================================
